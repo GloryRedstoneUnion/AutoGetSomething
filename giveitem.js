@@ -36,14 +36,14 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
     {
         //East sn
         const EastScanPos = [
-            { startPos: pos(790,75,-1430), faceOffset: {y:74,z:-1428}, floor: 1 },
+            { startPos: pos(790,75,-1430), faceOffset: {y:74,z:-1428}, floor: 1},
             { startPos: pos(790,76,-1427), faceOffset: {y:77,z:-1427}, floor: 2},
-            { startPos: pos(790,79,-1427), faceOffset: {y:80,z:-1427}, floor: 3 },
-            { startPos: pos(790,83,-1431), faceOffset: {y:82,z:-1429}, floor: 4 },
-            { startPos: pos(790,75,-1434), faceOffset: {y:74,z:-1436}, floor: 1 },
-            { startPos: pos(790,76,-1437), faceOffset: {y:77,z:-1437}, floor: 2 },
-            { startPos: pos(790,79,-1437), faceOffset: {y:80,z:-1437}, floor: 3 },
-            { startPos: pos(790,83,-1433), faceOffset: {y:82,z:-1435}, floor: 4 },
+            { startPos: pos(790,79,-1427), faceOffset: {y:80,z:-1427}, floor: 3},
+            { startPos: pos(790,83,-1431), faceOffset: {y:82,z:-1429}, floor: 4},
+            { startPos: pos(790,75,-1434), faceOffset: {y:74,z:-1436}, floor: 1},
+            { startPos: pos(790,76,-1437), faceOffset: {y:77,z:-1437}, floor: 2},
+            { startPos: pos(790,79,-1437), faceOffset: {y:80,z:-1437}, floor: 3},
+            { startPos: pos(790,83,-1433), faceOffset: {y:82,z:-1435}, floor: 4},
         ]
         let facing=1
         blocks = new Map()
