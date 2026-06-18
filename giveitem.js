@@ -317,6 +317,48 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
     {
         Chat.say("物品不存在")
         Chat.say("@@ "+player)
+        let might = []
+
+        for(let i=0;i<id.length;i++){
+            Client.getRegisteredItems().forEach(item => {
+        
+                let key = null
+        
+                if(item.getId().includes(id[i])){
+                    key = item.getId()
+                }else if(item.getName().includes(id[i])){
+                    key = item.getName()
+                }
+        
+                if(!key) return
+        
+                let idx = might.findIndex(x => x.fs === key)
+        
+                if(idx === -1){
+                    might.push({fs: key, sd: 1})
+                }else{
+                    might[idx].sd++
+                }
+            })
+        }
+        
+        might.sort((a,b)=>b.sd-a.sd)
+        
+        if(might.length === 0) return
+        
+        let mtall = ""
+        let max = might[0].sd
+        
+        might.forEach(item=>{
+            if(item.sd === max)
+                mtall += item.fs + " "
+        })
+        
+        let str = "可能是:"
+        for(let i=0;i<mtall.length && i<248;i++){
+            str += mtall[i]
+        }
+        Chat.say(str.length==252?str+"...":str)
         return
     }
     Chat.say("是的，我知道，"+before+"，一点不错")
