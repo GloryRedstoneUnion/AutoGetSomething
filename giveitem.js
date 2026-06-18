@@ -191,6 +191,12 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
                 dx++;
             }
             gb_tt=Player.getPlayer().getPos()
+            distance=Math.sqrt(Math.pow(gb_tt.getX()-dx-xx,2)+Math.pow(gb_tt.getZ()-dz-zz,2))
+            Chat.say("/tell _XuanMing_ "+distance)
+            if(distance>20)
+            {
+                Chat.say("这要花不少时间，先生")
+            }
             Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
             while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
             {
