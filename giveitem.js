@@ -342,7 +342,11 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
             })
         }
         
-        might.sort((a,b)=>b.sd-a.sd)
+        might.sort((a,b)=>{
+            if(a.sd!=b.sd)
+                return b.sd-a.sd
+            return a.fs.length-b.fs.length
+        })
         
         if(might.length === 0) return
         
