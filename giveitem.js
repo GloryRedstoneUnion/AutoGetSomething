@@ -258,6 +258,7 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
         count=Counts
         function getsome(dz)
         {
+            Chat.log(!Dzblocks.has(ItemInfo.getName()))
             if(!dz && ((count<1728 && blocks.has(ItemInfo.getName()) && Dzblocks.has(ItemInfo.getName())) || (blocks.has(ItemInfo.getName()) && !Dzblocks.has(ItemInfo.getName()))))
             {
                 pos=blocks.get(ItemInfo.getName())
@@ -339,7 +340,7 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
             }
             else if(sum<count)
             {
-                if(dz || !blocks.has(ItemInfo.getName()))//先去取的大宗
+                if(dz || !Dzblocks.has(ItemInfo.getName()))//先去取的大宗
                 {
                     Chat.say("这得要不少货，先生")
                     Chat.say("@@ "+player)                    
