@@ -1,4 +1,6 @@
 JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
+    const blacklist=["Wkicore_glasses"]
+
     let msg = event.text.getString();
 
     let match = msg.match(/^<([^>]+)>\s+!!get\s+([a-z0-9_\-.]+:[a-z0-9_\-.]+)\s+(\d+)/i);
@@ -17,6 +19,19 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
     let player = match[1];
     let id = match[2];
     let count = parseInt(match[3]);
+
+    flag=0
+    blacklist.forEach(players => {
+        if(players==player)
+        {
+            flag=1
+            return 
+        }
+    })
+    if(flag)
+    {
+        return
+    }
 
     let hasbot=0
     World.getPlayers().forEach(player => {
