@@ -174,7 +174,40 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
         WestScanPos.forEach(pos => {
             WestscanRow(pos)
         })
-        if(!blocks.has(ItemInfo.getName()))
+        Dzblocks = new Map()
+        function Dzframefacting(pos1,x,y,z)
+        {
+            if(pos1.faceOffset.x==782)
+                return pos(x-1,y+2,z)
+            return pos(x+1,y+2,z)
+        }
+        DzEastScanPos={ startPos: pos(782,77,-1464), faceOffset: {x:782,y:78}, floor: 1 }
+        DzWestscanPos={ startPos: pos(772,77,-1464), faceOffset: {x:772,y:78}, floor: 1 }
+        wall=-1517
+        function DzScanRow(pos)
+        {
+            let x,y,z
+            [x,y,z]=[pos.startPos.getX(),pos.startPos.getY(),pos.startPos.getZ()]
+            while(z>=wall)
+            {
+                if(itemFrameMap.has(pos2str(Dzframefacting(pos,x,y,z))))
+                {
+                    if(itemFrameMap.get(pos2str(Dzframefacting(pos,x,y,z))).getName().getString()!="空气")
+                        Dzblocks.set(itemFrameMap.get(pos2str(Dzframefacting(pos,x,y,z))).getName().getString(),{dx:x,dy:y,dz:z,df:(pos.floor),fo:(pos.faceOffset)});
+                }
+                else if(World.getBlock(x,y,z).getName().getString()!="空气")
+                {
+                    if(!Dzblocks.has(World.getBlock(x,y,z).getName().getString()))
+                    {
+                        Dzblocks.set(World.getBlock(x,y,z).getName().getString(),{dx:x,dy:y,dz:z,df:(pos.floor),fo:(pos.faceOffset)})
+                    }
+                }
+                z--;
+            }
+        }
+        DzScanRow(DzEastScanPos)
+        DzScanRow(DzWestscanPos)
+        if(!blocks.has(ItemInfo.getName()) && !Dzblocks.has(ItemInfo.getName()))
         {
             Chat.say("全物品没有或者以实体形式存在")
             Chat.say("@@ "+player)
@@ -198,7 +231,7 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
                 Chat.say("这要花不少时间，先生")
             }
             Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
-            while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
+            while(Math.abs(gb_tt.getX()-dx-xx)>0.8 || Math.abs(gb_tt.getZ()-dz-zz)>0.8 || Math.abs(gb_tt.getY()-dy)>0.2)
             {
                 gb_tt=Player.getPlayer().getPos()
             }
@@ -206,12 +239,23 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
             Time.sleep(350)
             Player.getPlayer().setPos(dx+xx,dy,dz+zz)
         }
-        pos=blocks.get(ItemInfo.getName())
+        // pos=blocks.get(ItemInfo.getName())
         count=Counts
-        function getsome()
+        function getsome(dz)
         {
-            Goto1(pos.dx,77,-1432)
-            Player.interactions().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+            if(!dz && ((count<1728 && blocks.has(ItemInfo.getName()) && Dzblocks.has(ItemInfo.getName())) || (blocks.has(ItemInfo.getName()) && !Dzblocks.has(ItemInfo.getName()))))
+            {
+                pos=blocks.get(ItemInfo.getName())
+                Goto1(pos.dx,77,-1432)
+                Player.interactions().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+            }
+            else
+            {
+                dz=1
+                pos=Dzblocks.get(ItemInfo.getName())
+                Goto1(777,77,pos.dz)
+                Player.interactions().interactBlock(pos.fo.x,pos.fo.y,pos.dz,"down", false)
+            }
             JsMacros.waitForEvent("OpenContainer");
             Time.sleep(200)
             let slot=0;
@@ -280,14 +324,32 @@ JsMacros.on("RecvMessage", JavaWrapper.methodToJava(event => {
             }
             else if(sum<count)
             {
-                Chat.say("这得要不少货，先生")
-                Chat.say("@@ "+player)
+                if(dz || !blocks.has(ItemInfo.getName()))//先去取的大宗
+                {
+                    Chat.say("这得要不少货，先生")
+                    Chat.say("@@ "+player)                    
+                }
+                else
+                {
+                    Player.interactions().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+                    JsMacros.waitForEvent("OpenContainer");
+                    for(let slot=54;slot<=89;slot++)
+                    {
+                        if(Player.openInventory().getSlot(slot).getItemId()!="minecraft:air")
+                        {
+                            Player.openInventory().quick(slot)
+                            Time.sleep(30)
+                        }
+                    }
+                    Player.openInventory().close()
+                    getsome(1)
+                }
                 return ;
             }
             Player.openInventory().close();
             return ;
         }
-        getsome()
+        getsome(0)
         return ;
     }
     Chat.say("/playerTools bot_item inventory")
